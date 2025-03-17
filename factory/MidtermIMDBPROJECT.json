@@ -1,0 +1,9 @@
+{
+	"name": "MidtermIMDBPROJECT",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "02e46fc7-da45-49db-bd1b-23d1dfff8790",
+		"tenantId": "a8eec281-aaa3-4dae-ac9b-9a398b9215e7"
+	}
+}
