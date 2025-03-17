@@ -1,0 +1,45 @@
+{
+	"name": "Parquet7",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "name_new_basics.parquet",
+				"fileSystem": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "nconst",
+				"type": "UTF8"
+			},
+			{
+				"name": "primaryName",
+				"type": "UTF8"
+			},
+			{
+				"name": "birthYear",
+				"type": "INT32"
+			},
+			{
+				"name": "deathYear",
+				"type": "INT32"
+			},
+			{
+				"name": "primaryProfession",
+				"type": "UTF8"
+			},
+			{
+				"name": "knownForTitles",
+				"type": "UTF8"
+			}
+		]
+	}
+}
