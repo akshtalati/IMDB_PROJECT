@@ -3,11 +3,94 @@
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
-			"transformations": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableTitleBasics",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableTitleBasicFlattned",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as boolean,",
+				"          STARTYEAR as decimal(38,0),",
+				"          ENDYEAR as decimal(38,0),",
+				"          RUNTIMEMINUTES as decimal(38,0),",
+				"          GENRES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source1",
+				"source1 derive(GENRES = split(GENRES,',')) ~> derivedColumn1",
+				"derivedColumn1 foldDown(unroll(GENRES),",
+				"     mapColumn(",
+				"          TCONST,",
+				"          TITLETYPE,",
+				"          PRIMARYTITLE,",
+				"          ORIGINALTITLE,",
+				"          ISADULT,",
+				"          STARTYEAR,",
+				"          ENDYEAR,",
+				"          RUNTIMEMINUTES,",
+				"          GENRES",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as boolean,",
+				"          STARTYEAR as decimal(38,0),",
+				"          ENDYEAR as decimal(38,0),",
+				"          RUNTIMEMINUTES as decimal(38,0),",
+				"          GENRES as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TCONST,",
+				"          TITLETYPE,",
+				"          PRIMARYTITLE,",
+				"          ORIGINALTITLE,",
+				"          ISADULT,",
+				"          STARTYEAR,",
+				"          ENDYEAR,",
+				"          RUNTIMEMINUTES,",
+				"          GENRES",
+				"     )) ~> sink1"
 			]
 		}
 	}
