@@ -1,0 +1,29 @@
+{
+	"name": "SnowflakeTable8",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Bhargav",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "COUNTRY_CODE",
+				"type": "VARCHAR",
+				"precision": 200,
+				"scale": 0
+			},
+			{
+				"name": "COUNTRY_NAME",
+				"type": "VARCHAR",
+				"precision": 200,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "COUNTRY_CODES"
+		}
+	}
+}
