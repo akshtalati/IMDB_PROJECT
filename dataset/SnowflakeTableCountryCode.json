@@ -1,0 +1,16 @@
+{
+	"name": "SnowflakeTableCountryCode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Aksh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "COUNTRY_CODES"
+		}
+	}
+}
