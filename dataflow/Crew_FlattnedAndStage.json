@@ -1,31 +1,72 @@
 {
-	"name": "Principal_FlattnedAndStage",
+	"name": "Crew_FlattnedAndStage",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SnowflakeTablePrincipal",
+						"referenceName": "SnowflakeTableCrew",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableCrewStaggedFlattned",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          TCONST as string,",
-				"          ORDERING as decimal(38,0),",
-				"          NCONST as string,",
-				"          CATEGORY as string,",
-				"          JOB as string,",
-				"          CHARACTERS as string",
+				"          DIRECTORS as string,",
+				"          WRITERS as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     format: 'table') ~> source1"
+				"     format: 'table') ~> source1",
+				"source1 derive(DIRECTORS = split(DIRECTORS,',')) ~> derivedColumn1",
+				"derivedColumn1 foldDown(unroll(DIRECTORS),",
+				"     mapColumn(",
+				"          DIRECTORS = DIRECTORS,",
+				"          TCONST,",
+				"          WRITERS",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TCONST as string,",
+				"          DIRECTORS as string,",
+				"          WRITERS as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          TCONST,",
+				"          DIRECTORS,",
+				"          WRITERS",
+				"     )) ~> sink1"
 			]
 		}
 	}
