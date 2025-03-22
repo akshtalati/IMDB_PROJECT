@@ -1,0 +1,35 @@
+{
+	"name": "SnowflakeTableLanguageCode",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Aksh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "LANGUAGEKEY",
+				"type": "VARCHAR",
+				"precision": 50,
+				"scale": 0
+			},
+			{
+				"name": "LANGUAGECODE",
+				"type": "VARCHAR",
+				"precision": 50,
+				"scale": 0
+			},
+			{
+				"name": "LANGUAGEDESCRIPTION",
+				"type": "VARCHAR",
+				"precision": 200,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIMLANGUAGE"
+		}
+	}
+}
