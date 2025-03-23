@@ -1,8 +1,8 @@
 {
-	"name": "SnowflakeTableDimTitle",
+	"name": "SnowflakeTableDimTitle_aksh",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Snowflake_Bhargav",
+			"referenceName": "Snowflake_Aksh",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -41,7 +41,7 @@
 			{
 				"name": "ISADULT",
 				"type": "VARCHAR",
-				"precision": 1,
+				"precision": 100,
 				"scale": 0
 			},
 			{
