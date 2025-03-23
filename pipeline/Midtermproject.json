@@ -748,8 +748,10 @@
 				}
 			},
 			{
-				"name": "Data flow1",
+				"name": "FactTitleRating",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "DIM_Language",
