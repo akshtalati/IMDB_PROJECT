@@ -1,0 +1,9 @@
+{
+	"name": "ADFrsspring2025",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "29ff5196-86ce-4711-b961-98bcf49e3eba",
+		"tenantId": "a8eec281-aaa3-4dae-ac9b-9a398b9215e7"
+	}
+}

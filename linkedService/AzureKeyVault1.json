@@ -1,11 +1,11 @@
 {
-	"name": "AzureDataLakeStorage1",
+	"name": "AzureKeyVault1",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
-		"type": "AzureBlobFS",
+		"type": "AzureKeyVault",
 		"typeProperties": {
-			"url": "https://rs1storageacc.dfs.core.windows.net/"
+			"baseUrl": "https://RKeyVault.vault.azure.net/"
 		}
 	}
 }
