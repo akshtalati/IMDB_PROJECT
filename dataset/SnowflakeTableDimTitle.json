@@ -1,5 +1,5 @@
 {
-	"name": "SnowflakeTable2",
+	"name": "SnowflakeTableDimTitle",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Snowflake_Bhargav",

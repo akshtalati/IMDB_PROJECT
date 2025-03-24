@@ -1,0 +1,41 @@
+{
+	"name": "SnowflakeTableFactTitleRating",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Aksh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "RATINGKEY",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "TITLEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "AVERAGERATING",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "NUMVOTES",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "FACTTITLERATINGS"
+		}
+	}
+}

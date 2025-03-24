@@ -1,0 +1,29 @@
+{
+	"name": "SnowflakeTableDimGenre",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Aksh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "GENREKEY",
+				"type": "VARCHAR",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "GENRENAME",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIMGENRE"
+		}
+	}
+}

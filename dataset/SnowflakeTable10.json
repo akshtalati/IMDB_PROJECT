@@ -1,0 +1,35 @@
+{
+	"name": "SnowflakeTable10",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Aksh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "TCONST",
+				"type": "VARCHAR",
+				"precision": 200,
+				"scale": 0
+			},
+			{
+				"name": "AVERAGERATING",
+				"type": "FLOAT",
+				"precision": 15,
+				"scale": 0
+			},
+			{
+				"name": "NUMVOTES",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "TITLE_RATINGS"
+		}
+	}
+}

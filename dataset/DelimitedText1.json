@@ -1,0 +1,48 @@
+{
+	"name": "DelimitedText1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "flattened_language_codes.csv",
+				"fileSystem": "bronze"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ISO 639-1 Code",
+				"type": "String"
+			},
+			{
+				"name": "ISO 639-2 Code",
+				"type": "String"
+			},
+			{
+				"name": "ISO 639-3 Code",
+				"type": "String"
+			},
+			{
+				"name": "Language Name",
+				"type": "String"
+			},
+			{
+				"name": "Scope",
+				"type": "String"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			}
+		]
+	}
+}
