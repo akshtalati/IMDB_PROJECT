@@ -1,0 +1,35 @@
+{
+	"name": "SnowflakeTabletitlegener",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Aksh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "BRIDGEKEY",
+				"type": "VARCHAR",
+				"precision": 50,
+				"scale": 0
+			},
+			{
+				"name": "TITLEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "GENREKEY",
+				"type": "VARCHAR",
+				"precision": 100,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "BRIDGETITLEGENRE"
+		}
+	}
+}

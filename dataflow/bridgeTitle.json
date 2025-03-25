@@ -1,0 +1,151 @@
+{
+	"name": "bridgeTitle",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableDimTitle_aksh",
+						"type": "DatasetReference"
+					},
+					"name": "DIMTITLE"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableDimGenre",
+						"type": "DatasetReference"
+					},
+					"name": "DIMGENER"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableTitleBasicFlattned",
+						"type": "DatasetReference"
+					},
+					"name": "STGTITLE"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTabletitlegener",
+						"type": "DatasetReference"
+					},
+					"name": "BRIDGETITLEGENER"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTabletitlegener",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "lookup2"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "lookup3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TITLEKEY as decimal(10,0),",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as string,",
+				"          STARTYEAR as string,",
+				"          ENDYEAR as string,",
+				"          RUNTIMEMINUTES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> DIMTITLE",
+				"source(output(",
+				"          GENREKEY as string,",
+				"          GENRENAME as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> DIMGENER",
+				"source(output(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as boolean,",
+				"          STARTYEAR as decimal(38,0),",
+				"          ENDYEAR as decimal(38,0),",
+				"          RUNTIMEMINUTES as decimal(38,0),",
+				"          GENRES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> STGTITLE",
+				"source(output(",
+				"          BRIDGEKEY as decimal(18,5)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     query: 'select NVL(MAX(BRIDGEKEY),0) AS BRIDGEKEY FROM IMDB_SCHEMA.BRIDGETITLEGENRE',",
+				"     format: 'query') ~> BRIDGETITLEGENER",
+				"lookup3, DIMGENER lookup(GENRES == GENRENAME,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup2",
+				"lookup2, BRIDGETITLEGENER join(1==1,",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 aggregate(groupBy(BRIDGEKEY,",
+				"          TITLEKEY,",
+				"          GENREKEY),",
+				"     countRow = count(TITLEKEY)) ~> aggregate1",
+				"aggregate1 keyGenerate(output(ROWNUM as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 derive(BridgeKey = BRIDGEKEY+ROWNUM) ~> derivedColumn1",
+				"STGTITLE, DIMTITLE lookup(STGTITLE@TCONST == DIMTITLE@TCONST,",
+				"     multiple: true,",
+				"     broadcast: 'auto')~> lookup3",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          BRIDGEKEY as string,",
+				"          TITLEKEY as decimal(10,0),",
+				"          GENREKEY as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          BRIDGEKEY = derivedColumn1@BridgeKey,",
+				"          TITLEKEY,",
+				"          GENREKEY",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
