@@ -36,9 +36,6 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "lookup1"
-				},
-				{
 					"name": "lookup2"
 				},
 				{
@@ -46,6 +43,15 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "lookup3"
 				}
 			],
 			"scriptLines": [
@@ -91,11 +97,7 @@
 				"     validateSchema: false,",
 				"     query: 'select NVL(MAX(BRIDGEKEY),0) AS BRIDGEKEY FROM IMDB_SCHEMA.BRIDGETITLEGENRE',",
 				"     format: 'query') ~> BRIDGETITLEGENER",
-				"STGTITLE, DIMTITLE lookup(trim(lower(STGTITLE@TCONST)) == trim(lower(DIMTITLE@TCONST)),",
-				"     multiple: false,",
-				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1",
-				"lookup1, DIMGENER lookup(GENRES == GENRENAME,",
+				"lookup3, DIMGENER lookup(GENRES == GENRENAME,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup2",
@@ -104,7 +106,17 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"join1 aggregate() ~> aggregate1"
+				"join1 aggregate(groupBy(BRIDGEKEY,",
+				"          TITLEKEY,",
+				"          GENREKEY),",
+				"     country = count(TITLEKEY)) ~> aggregate1",
+				"aggregate1 keyGenerate(output(ROWNUM as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 derive(Bri = ERROR_FUNCTION('')) ~> derivedColumn1",
+				"STGTITLE, DIMTITLE lookup(STGTITLE@TCONST == DIMTITLE@TCONST,",
+				"     multiple: true,",
+				"     broadcast: 'auto')~> lookup3"
 			]
 		}
 	}
