@@ -1,0 +1,111 @@
+{
+	"name": "bridgeTitle",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableDimTitle_aksh",
+						"type": "DatasetReference"
+					},
+					"name": "DIMTITLE"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableDimGenre",
+						"type": "DatasetReference"
+					},
+					"name": "DIMGENER"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableTitleBasicFlattned",
+						"type": "DatasetReference"
+					},
+					"name": "STGTITLE"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTabletitlegener",
+						"type": "DatasetReference"
+					},
+					"name": "BRIDGETITLEGENER"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "lookup2"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "aggregate1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TITLEKEY as decimal(10,0),",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as string,",
+				"          STARTYEAR as string,",
+				"          ENDYEAR as string,",
+				"          RUNTIMEMINUTES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> DIMTITLE",
+				"source(output(",
+				"          GENREKEY as string,",
+				"          GENRENAME as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> DIMGENER",
+				"source(output(",
+				"          TCONST as string,",
+				"          TITLETYPE as string,",
+				"          PRIMARYTITLE as string,",
+				"          ORIGINALTITLE as string,",
+				"          ISADULT as boolean,",
+				"          STARTYEAR as decimal(38,0),",
+				"          ENDYEAR as decimal(38,0),",
+				"          RUNTIMEMINUTES as decimal(38,0),",
+				"          GENRES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> STGTITLE",
+				"source(output(",
+				"          BRIDGEKEY as decimal(18,5)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     query: 'select NVL(MAX(BRIDGEKEY),0) AS BRIDGEKEY FROM IMDB_SCHEMA.BRIDGETITLEGENRE',",
+				"     format: 'query') ~> BRIDGETITLEGENER",
+				"STGTITLE, DIMTITLE lookup(trim(lower(STGTITLE@TCONST)) == trim(lower(DIMTITLE@TCONST)),",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1, DIMGENER lookup(GENRES == GENRENAME,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup2",
+				"lookup2, BRIDGETITLEGENER join(1==1,",
+				"     joinType:'cross',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 aggregate() ~> aggregate1"
+			]
+		}
+	}
+}
