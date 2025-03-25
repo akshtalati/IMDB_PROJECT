@@ -33,7 +33,11 @@
 					"name": "BRIDGETITLEGENER"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "lookup2"
@@ -116,7 +120,11 @@
 				"surrogateKey1 derive(Bri = ERROR_FUNCTION('')) ~> derivedColumn1",
 				"STGTITLE, DIMTITLE lookup(STGTITLE@TCONST == DIMTITLE@TCONST,",
 				"     multiple: true,",
-				"     broadcast: 'auto')~> lookup3"
+				"     broadcast: 'auto')~> lookup3",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
