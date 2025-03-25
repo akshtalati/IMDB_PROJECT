@@ -35,6 +35,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "SnowflakeTabletitlegener",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
@@ -113,18 +117,34 @@
 				"join1 aggregate(groupBy(BRIDGEKEY,",
 				"          TITLEKEY,",
 				"          GENREKEY),",
-				"     country = count(TITLEKEY)) ~> aggregate1",
+				"     countRow = count(TITLEKEY)) ~> aggregate1",
 				"aggregate1 keyGenerate(output(ROWNUM as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 derive(Bri = ERROR_FUNCTION('')) ~> derivedColumn1",
+				"surrogateKey1 derive(BridgeKey = BRIDGEKEY+ROWNUM) ~> derivedColumn1",
 				"STGTITLE, DIMTITLE lookup(STGTITLE@TCONST == DIMTITLE@TCONST,",
 				"     multiple: true,",
 				"     broadcast: 'auto')~> lookup3",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          BRIDGEKEY as string,",
+				"          TITLEKEY as decimal(10,0),",
+				"          GENREKEY as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          BRIDGEKEY = derivedColumn1@BridgeKey,",
+				"          TITLEKEY,",
+				"          GENREKEY",
+				"     )) ~> sink1"
 			]
 		}
 	}
