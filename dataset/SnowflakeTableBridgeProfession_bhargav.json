@@ -1,0 +1,47 @@
+{
+	"name": "SnowflakeTableBridgeProfession_bhargav",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Bhargav",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "NAMEKEY",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "NAMEPROFESSIONKEY",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "PROFESSIONKEY",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "DI_JOB_ID",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "DI_CREATED_DT",
+				"type": "TIMESTAMP_NTZ",
+				"precision": 29,
+				"scale": 9
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "BRIDGENAMEPROFESSION"
+		}
+	}
+}
