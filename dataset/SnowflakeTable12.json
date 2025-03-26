@@ -1,0 +1,65 @@
+{
+	"name": "SnowflakeTable12",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Bhargav",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "EPISODEKEY",
+				"type": "VARCHAR",
+				"precision": 50,
+				"scale": 0
+			},
+			{
+				"name": "TITLEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "EPISODETITLEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "PARENTTITLEKEY",
+				"type": "NUMBER",
+				"precision": 10,
+				"scale": 0
+			},
+			{
+				"name": "SEASONNUMBER",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "EPISODENUMBER",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "DI_JOB_ID",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "DI_CREATED_DT",
+				"type": "TIMESTAMP_NTZ",
+				"precision": 29,
+				"scale": 9
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "FACTEPISODES"
+		}
+	}
+}

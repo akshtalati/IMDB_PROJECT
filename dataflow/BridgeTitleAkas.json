@@ -1,5 +1,5 @@
 {
-	"name": "BridheTitleGenre",
+	"name": "BridgeTitleAkas",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -26,7 +26,15 @@
 					"name": "source3"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable11",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
@@ -36,6 +44,12 @@
 				},
 				{
 					"name": "lookup1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -87,7 +101,33 @@
 				"join1, source3 lookup(GENRES == GENRENAME,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1"
+				"     broadcast: 'auto')~> lookup1",
+				"join2 aggregate(groupBy(source1@TCONST,",
+				"          source2@ORIGINALTITLE)) ~> aggregate1",
+				"aggregate1 keyGenerate(output(TitleAkaskey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TITLEAKAKEY as string,",
+				"          TITLEKEY as decimal(10,0),",
+				"          LANGUAGEKEY as string,",
+				"          REGIONKEY as string,",
+				"          ORDERING as decimal(10,0),",
+				"          AKATITLE as string,",
+				"          TYPES as string,",
+				"          ATTRIBUTES as string,",
+				"          ISORIGINALTITLE as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true) ~> sink1"
 			]
 		}
 	}

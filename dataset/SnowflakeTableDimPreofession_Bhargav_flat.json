@@ -1,0 +1,29 @@
+{
+	"name": "SnowflakeTableDimPreofession_Bhargav_flat",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Bhargav",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "PROFESSIONKEY",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "PROFESSIONNAME",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "DIMPROFESSION"
+		}
+	}
+}

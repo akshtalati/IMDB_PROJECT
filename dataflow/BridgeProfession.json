@@ -1,0 +1,136 @@
+{
+	"name": "BridgeProfession",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTablenamebasics_bhargav",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableDimPreofession_Bhargav_flat",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTablename_bhargav",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTableBridgeProfession_bhargav",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          NCONST as string,",
+				"          PRIMARYNAME as string,",
+				"          BIRTHYEAR as decimal(38,0),",
+				"          DEATHYEAR as decimal(38,0),",
+				"          PRIMARYPROFESSION as string,",
+				"          KNOWNFORTITLES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          PROFESSIONKEY as decimal(38,0),",
+				"          PROFESSIONNAME as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          NAMEKEY as string,",
+				"          NCONST as string,",
+				"          PRIMARYNAME as string,",
+				"          BIRTHYEAR as string,",
+				"          DEATHYEAR as string,",
+				"          KNOWNFORTITLES as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source3",
+				"source1, source3 lookup(source1@NCONST == source3@NCONST,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1, source2 join(PRIMARYPROFESSION == PROFESSIONNAME,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"select1 keyGenerate(output(BridgeProfessionKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"join1 select(mapColumn(",
+				"          NCONST = source1@NCONST,",
+				"          PRIMARYNAME = source1@PRIMARYNAME,",
+				"          BIRTHYEAR = source1@BIRTHYEAR,",
+				"          DEATHYEAR = source1@DEATHYEAR,",
+				"          PRIMARYPROFESSION,",
+				"          KNOWNFORTITLES = source1@KNOWNFORTITLES,",
+				"          NAMEKEY,",
+				"          PRIMARYNAME = source3@PRIMARYNAME,",
+				"          BIRTHYEAR = source3@BIRTHYEAR,",
+				"          DEATHYEAR = source3@DEATHYEAR,",
+				"          KNOWNFORTITLES = source3@KNOWNFORTITLES,",
+				"          PROFESSIONKEY,",
+				"          PROFESSIONNAME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          NAMEKEY as string,",
+				"          NAMEPROFESSIONKEY as string,",
+				"          PROFESSIONKEY as decimal(38,0),",
+				"          DI_JOB_ID as string,",
+				"          DI_CREATED_DT as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          NAMEKEY,",
+				"          NAMEPROFESSIONKEY = PRIMARYPROFESSION,",
+				"          PROFESSIONKEY",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
