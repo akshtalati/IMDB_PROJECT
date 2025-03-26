@@ -33,7 +33,15 @@
 					"name": "source4"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable14",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "lookup1"
@@ -43,6 +51,12 @@
 				},
 				{
 					"name": "join1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "surrogateKey1"
 				}
 			],
 			"scriptLines": [
@@ -94,11 +108,41 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup2",
-				"lookup2 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"lookup2, source3 join(source1@TCONST == source3@TCONST,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> join1",
+				"join1 aggregate(groupBy(NAMEKEY,",
+				"          source3@TITLEKEY,",
+				"          {} = ERROR_FUNCTION(''))) ~> aggregate1",
+				"aggregate1 keyGenerate(output(PrinicpalKey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          PRINCIPALKEY as string,",
+				"          TITLEKEY as decimal(10,0),",
+				"          NAMEKEY as string,",
+				"          ORDERING as string,",
+				"          CATEGORY as string,",
+				"          JOB as string,",
+				"          CHARACTERS as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          PRINCIPALKEY = PrinicpalKey,",
+				"          TITLEKEY,",
+				"          NAMEKEY",
+				"     )) ~> sink1"
 			]
 		}
 	}
