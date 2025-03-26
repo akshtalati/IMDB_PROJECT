@@ -26,7 +26,15 @@
 					"name": "source3"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable12",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
@@ -90,7 +98,27 @@
 				"select1, source3 lookup(PARENTTCONST == source3@TCONST,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> lookup1"
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EPISODEKEY as string,",
+				"          TITLEKEY as decimal(10,0),",
+				"          EPISODETITLEKEY as decimal(10,0),",
+				"          PARENTTITLEKEY as decimal(10,0),",
+				"          SEASONNUMBER as string,",
+				"          EPISODENUMBER as string,",
+				"          DI_JOB_ID as string,",
+				"          DI_CREATED_DT as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     stageInsert: true) ~> sink1"
 			]
 		}
 	}

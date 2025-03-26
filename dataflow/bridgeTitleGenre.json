@@ -1,5 +1,5 @@
 {
-	"name": "bridgeTitle",
+	"name": "bridgeTitleGenre",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

@@ -1,0 +1,53 @@
+{
+	"name": "SnowflakeTablePrincipal_bhargav",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflake_Bhargav",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeTable",
+		"schema": [
+			{
+				"name": "TCONST",
+				"type": "VARCHAR",
+				"precision": 200,
+				"scale": 0
+			},
+			{
+				"name": "ORDERING",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "NCONST",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "CATEGORY",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "JOB",
+				"type": "VARCHAR",
+				"precision": 244,
+				"scale": 0
+			},
+			{
+				"name": "CHARACTERS",
+				"type": "VARCHAR",
+				"precision": 32,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "IMDB_SCHEMA",
+			"table": "TITLE_PRINCIPAL"
+		}
+	}
+}
